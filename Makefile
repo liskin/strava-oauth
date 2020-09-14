@@ -1,10 +1,17 @@
-build:
-	docker-compose up --build -d
+PYTHON = python3
+VENV = .venv
+VENV_PIP = $(VENV)/bin/pip
+VENV_PYTHON = $(VENV)/bin/python
+VENV_DONE = $(VENV)/.done
 
+.PHONY: venv
+venv: $(VENV_DONE)
+
+.PHONY: clean
 clean:
-	docker-compose down
-	docker system prune -fa
-	docker volume prune -f
+	git clean -ffdX
 
-deploy:
-	docker-compose -f docker-compose.yml -f docker-compose.prod.yml up --build -d
+$(VENV_DONE): $(MAKEFILE_LIST) requirements.txt
+	$(PYTHON) -m venv --system-site-packages $(VENV)
+	$(VENV_PIP) install -r requirements.txt
+	touch $@

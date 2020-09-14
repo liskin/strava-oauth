@@ -15,7 +15,7 @@ def authorize_url():
         "client_id": os.getenv('STRAVA_CLIENT_ID'),
         "response_type": "code",
         "redirect_uri": f"{app_url}:5042/authorization_successful",
-        "scope": "read,profile:read_all,activity:read",
+        "scope": "read,profile:read_all,activity:read_all",
         "state": 'https://github.com/sladkovm/strava-oauth',
         "approval_prompt": "force"
     }
@@ -52,9 +52,9 @@ def authorization_successful(req, resp):
         "grant_type": "authorization_code"
     }
     r = requests.post("https://www.strava.com/oauth/token", params)
-    logger.debug(r.text)
     resp.text = r.text
+    print(r.text)
 
 
 if __name__ == "__main__":
-    api.run(address="0.0.0.0")
+    api.run(address="127.0.0.1")
